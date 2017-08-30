@@ -19,7 +19,7 @@ close all;
 % Add Paths
 % ----------
 % Adding path to 'Geometric Control Toolbox'
-addpath('../Geometry-Toolbox/');
+addpath('./Geometry-Toolbox/');
 
 
 %% INITIALZING PARAMETERS
@@ -37,11 +37,18 @@ data.params.e3 = [0;0;1] ;
 % ================================
 % Zero Position 
 % -------------
-xQ0 = zeros(3,1);
+xQ0 = [];
 vQ0 = zeros(3,1);
 
-R0 = RPYtoRot_ZXY(0*pi/180,0*pi/180, 0*pi/180) ;
+R0 = RPYtoRot_ZXY(010*pi/180,0*pi/180, 0*pi/180) ;
 Omega0 = zeros(3,1);
+
+xQ0 = [1;3;2]; 1*ones(3,1);
+vQ0 = zeros(3,1);
+% 
+R0 = RPYtoRot_ZXY(0*pi/180, 10*pi/180, 20*pi/180) ;
+Omega0 = zeros(3,1);
+
 
 % Zero Initial Error- Configuration
 % ---------------------------------
@@ -64,7 +71,7 @@ x0 = [xQ0; vQ0; reshape(R0,9,1); Omega0 ];
 disp('Simulating...') ;
 odeopts = odeset('RelTol', 1e-8, 'AbsTol', 1e-9) ;
 % odeopts = [] ;
-[t, x] = ode15s(@odefun_quadDynamics, [0 1], x0, odeopts, data) ;
+[t, x] = ode15s(@odefun_quadDynamics, [0 20], x0, odeopts, data) ;
 
 % Computing Various Quantities
 disp('Computing...') ;
@@ -169,6 +176,8 @@ dx = [];
     kp_xy = 0.3/epsilon_bar^2 ; kd_xy = 0.6/epsilon_bar ;
     k1 = diag([kp_xy kp_xy 2]) ; k2 = diag([kd_xy kd_xy 1.5]) ;
 
+    k1 =  0.12*diag([4, 4 ,9.8055*1.2]);
+    k2 = 0.5*diag([4, 4, 10]);
     A = (-k1*eQ - k2*deQ + (mQ)*(aQd + g*e3));
     normA = norm(A);
     b3c = A/norm(A);
