@@ -137,23 +137,23 @@ e3 = data.params.e3;
 
 % fetching desired states
 % -----------------------
-% [trajd] = get_nom_traj(data.params,get_flats(t));
-% 
-% xQd = trajd.xQ;
-% vQd = trajd.vQ;
-% aQd = trajd.aQ;
-% 
-% Rd = trajd.R;
-% Omegad = trajd.Omega;
-% dOmegad = trajd.dOmega;
+[trajd] = flat2state(data.params,get_flats(t));
 
-xQd = [0;02;02];
-vQd = [0;0;0];
-aQd = [0;0;0];
+xQd = trajd.x;
+vQd = trajd.v;
+aQd = trajd.a;
 
-Rd = eye(3);
-Omegad = zeros(3,1);
-dOmegad = zeros(3,1);
+Rd = trajd.R;
+Omegad = trajd.Omega;
+dOmegad = trajd.dOmega;
+
+% xQd = [0;02;02];
+% vQd = [0;0;0];
+% aQd = [0;0;0];
+% 
+% Rd = eye(3);
+% Omegad = zeros(3,1);
+% dOmegad = zeros(3,1);
 
 
 
@@ -172,7 +172,7 @@ dx = [];
     eQ = xQ - xQd;
     deQ = vQ - vQd;
 
-    epsilon_bar = 0.8 ;
+    epsilon_bar = 01;
     kp_xy = 0.3/epsilon_bar^2 ; kd_xy = 0.6/epsilon_bar ;
     k1 = diag([kp_xy kp_xy 2]) ; k2 = diag([kd_xy kd_xy 1.5]) ;
 
