@@ -52,12 +52,12 @@ Omega0 = zeros(3,1);
 
 % Zero Initial Error- Configuration
 % ---------------------------------
-% [trajd0] = get_nom_traj(data.params,get_flats(0));
-% xQ0 = trajd0.xQ;
-% vQ0 = trajd0.vQ;
-% 
-% R0 = trajd0.R;
-% Omega0 = trajd0.Omega;
+[trajd0] = get_nom_traj(data.params,get_flats(0));
+xQ0 = trajd0.xQ;
+vQ0 = trajd0.vQ;
+
+R0 = trajd0.R;
+Omega0 = trajd0.Omega;
 
 % state - structure
 % -----------------
@@ -82,6 +82,9 @@ for i = ind
    xd(i,:) = xd_';
    psi_exL(i) = norm(x(i,1:3)-xd(i,1:3));
    psi_evL(i) = norm(x(i,4:6)-xd(i,4:6));
+   
+   Rd = reshape(xd(i,7:15),3,3); R = reshape(x(i,7:15),3,3);  
+   PsiR(i) = 0.5*trace(eye(3)-Rd'*R);
    f(i,1)= f_;
    M(i,:)= M_';
 end
@@ -108,12 +111,15 @@ end
     xlabel('x-axis');ylabel('y-axis');zlabel('z-axis');
 
     figure;
-    subplot(2,1,1);
+    subplot(3,1,1);
     plot(t(ind),psi_exL(ind));
     grid on; title('position error');legend('psi-exL');
-    subplot(2,1,2);
+    subplot(3,1,2);
     plot(t(ind),psi_evL(ind));
     grid on; title('velocity error');legend('psi-evL');
+    subplot(3,1,3);
+    plot(t(ind), PsiR(ind));
+    grid on; title('$$\Psi_R$$');
  
 % % ANIMATION
 % % =========
